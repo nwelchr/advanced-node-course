@@ -1,0 +1,15 @@
+{
+  "name": "node-udemy",
+  "version": "1.0.0",
+  "description": "Node's Event loop is single threaded. Some of Node Framework/Std Lib are not actually single threaded! PBKDF2 uses 4 threads by default.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
