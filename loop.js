@@ -15,7 +15,7 @@ function shouldContinue() {
     pendingTimers.length || pendingOSTasks.length || pendingOperations.length
   );
 }
-
+̀
 // entire body executes in one 'tick'
 while (shouldContinue()) {
   // 1) Node looks at pendingTimers and sees if any functions are ready to be called. setTimeout, setInterval
