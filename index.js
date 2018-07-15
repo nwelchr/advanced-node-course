@@ -1,29 +1,32 @@
-process.env.UV_THREADPOOL_SIZE = 1;
-const cluster = require('cluster');
+const crypto = require('crypto');
+const express = require('express');
+const app = express();
+const Worker = require('webworker-threads').Worker;
 
-// first time around cluster.isMaster will be true
-// so we call .fork which creates a worker thread
-// which runs index.js again but where cluster.isMaster
-// is false :)
-if (cluster.isMaster) {
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-  cluster.fork();
-} else {
-  const crypto = require('crypto');
-  const express = require('express');
-  const app = express();
+app.get('/', (req, res) => {
+  const worker = new Worker(function() {
+    this.onmessage = function() {
+      // step 2
+      let counter = 0;
+      while (counter < 1e9) {
+        counter++;
+      }
 
-  app.get('/', (req, res) => {
-    crypto.pbkdf2('a', 'b', 100000, 512, 'sha512', () => {
-      res.send('Hi there');
-    });
+      postMessage(counter); // step 3
+    };
   });
 
-  app.get('/fast', (req, res) => {
-    res.send('That was fast!');
-  });
+  // step 4
+  worker.onmessage = function(message) {
+    console.log(message.data);
+    res.send('' + message.data);
+  };
 
-  app.listen(3000);
-}
+  worker.postMessage(); // step 1
+});
+
+app.get('/fast', (req, res) => {
+  res.send('That was fast!');
+});
+
+app.listen(3000);
